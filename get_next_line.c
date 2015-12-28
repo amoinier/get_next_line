@@ -32,8 +32,8 @@ int		get_next_line(int const fd, char **line)
   	static	int	sta = 0;
 	int		i;
 	int		x;
-	int		ret;
 	int		test;
+	int		ret;
 	char	buf[BUFF_SIZE + 1];
 
 	i = 0;
@@ -43,8 +43,9 @@ int		get_next_line(int const fd, char **line)
 		return (-1);
 	while ((ret = read(fd, buf, BUFF_SIZE)) && ret != -1 && test != 1)
 	{
+		buf[ret] = '\0';
 		i = 0;
-		while (buf[i] != '\n' && i < BUFF_SIZE && buf[i])
+		while (buf[i] != '\n' && buf[i])
 		{
 			line[sta] = ft_allo_mem(line[sta], x, buf[i]);
 			i++;
@@ -54,7 +55,6 @@ int		get_next_line(int const fd, char **line)
 		}
 	}
 	sta++;
-	ft_putnbr(sta);
 	return (ret);
 }
 
@@ -71,7 +71,5 @@ int	main(int ac, char **av)
 	get_next_line(fd, line);
 	ft_putstr(line[0]);
 	ft_putchar('\n');
-	get_next_line(fd, line);
-	ft_putstr(line[1]);
 	return (0);
 }
