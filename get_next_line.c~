@@ -6,70 +6,68 @@
 /*   By: amoinier <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 17:02:06 by amoinier          #+#    #+#             */
-/*   Updated: 2015/12/19 19:05:25 by amoinier         ###   ########.fr       */
+/*   Updated: 2016/01/05 15:55:38 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <get_next_line.h>
-#include <libft.h>
+#include "get_next_line.h"
 
-char    *ft_allo_mem(char *tab, int size, char buf)
+char	*ft_stockfile(int const fd)
 {
-	char    *tab2;
-	int     x;
+	int		ret;
+	char	buf[BUFF_SIZE + 1];
+	char	*str;
 
-	x = -1;
-	if ((tab2 = (char*)malloc((1 * size) + 1)) == NULL)
-		return (NULL);
-	while (++x < size)
-		tab2[x] = tab[x];
-	tab2[x] = buf;
-	return (tab2);
+	str = "";
+	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
+	{
+		buf[ret] = '\0';
+		str = ft_strjoin(str, buf);
+		if (ft_strchr(str, '\n'))
+			break ;
+	}
+	return (str);
 }
 
 int		get_next_line(int const fd, char **line)
 {
-  	static	int	sta = 0;
-	int		i;
-	int		x;
-	int		test;
-	int		ret;
-	char	buf[BUFF_SIZE + 1];
+	int				i;
+	static	char	*tmp;
 
-	i = 0;
-	x = 0;
-	test = 0;
-	if (fd == -1)
+	if (fd < 0 || !line)
 		return (-1);
-	while ((ret = read(fd, buf, BUFF_SIZE)) && ret != -1 && test != 1)
-	{
-		buf[ret] = '\0';
-		i = 0;
-		while (buf[i] != '\n' && buf[i])
-		{
-			line[sta] = ft_allo_mem(line[sta], x, buf[i]);
-			i++;
-			x++;
-			if (buf[i] == '\n')
-				test = 1;
-		}
-	}
-	sta++;
-	return (ret);
+	if (!tmp)
+		tmp = "";
+	tmp = ft_strjoin(tmp, ft_stockfile(fd));
+	i = 0;
+	if (tmp[i] == '\0')
+		return (0);
+	while (tmp[i] != '\n' && tmp[i])
+		i++;
+	*line = (char *)malloc(sizeof(*line) * (i + 1));
+	ft_strncpy(*line, tmp, i);
+	tmp = &tmp[i + 1];
+	return (1);
 }
 
 int	main(int ac, char **av)
 {
 	int		fd;
-	char	**line;
+	int	i;
+	char	*line;
 
-	line = (char **)malloc(sizeof(line) * 10);
-	if (!line)
-		return (0);
+	line = NULL;
 	ac = ac * 1;
+	i = 0;
 	fd = open(av[1], O_RDONLY);
-	get_next_line(fd, line);
-	ft_putstr(line[0]);
-	ft_putchar('\n');
+	while ((i = get_next_line(fd, &line)) == 1)
+	{
+		ft_putnbr(i);
+		ft_putchar('|');
+		ft_putstr(line);
+		ft_putchar('|');
+		ft_putchar('\n');
+		i++;
+	}
 	return (0);
 }

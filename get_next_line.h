@@ -6,15 +6,16 @@
 /*   By: amoinier <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 16:54:47 by amoinier          #+#    #+#             */
-/*   Updated: 2016/01/03 17:43:16 by amoinier         ###   ########.fr       */
+/*   Updated: 2016/01/05 15:56:01 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# define BUFF_SIZE 1
+# define BUFF_SIZE 32
 
+# include "libft.h"
 # include <fcntl.h>
 # include <sys/types.h>
 # include <sys/uio.h>
