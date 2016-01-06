@@ -6,70 +6,83 @@
 /*   By: amoinier <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 17:02:06 by amoinier          #+#    #+#             */
-/*   Updated: 2016/01/05 20:40:20 by amoinier         ###   ########.fr       */
+/*   Updated: 2016/01/06 15:38:56 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strjoin_free(char *s1, char *s2)
+static	void	ft_cleanstr(char *str, int size)
+{
+	int	i;
+
+	i = -1;
+	while (++i < size + 1 && str[i])
+		str[i] = '\0';
+}
+
+static	char	*ft_strjoin_free(char *s1, char *s2)
 {
 	char    *tmp;
 
 	tmp = ft_strdup(s1);
+	ft_cleanstr(s1, ft_strlen(s1));
 	free(s1);
 	s1 = ft_strjoin(tmp, s2);
+	ft_cleanstr(tmp, ft_strlen(tmp));
 	free(tmp);
 	return (s1);
 }
 
-char	*ft_stockfile(int const fd)
+static	char	*ft_stockfile(int const fd)
 {
 	int		ret;
-	char	*buf;
+	int		i;
+	char	buf[BUFF_SIZE + 1];
 	char	*str;
 
 	str = ft_strnew(1);
-	buf = ft_strnew(BUFF_SIZE);
+	i = 1;
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[ret] = '\0';
 		str = ft_strjoin_free(str, buf);
+		i++;
 		if (ft_strchr(str, '\n'))
 			break ;
 	}
 	if (ret < 0)
-		str = NULL;
-	free(buf);
+		return (NULL);
 	return (str);
 }
 
-int		get_next_line(int const fd, char **line)
+int				get_next_line(int const fd, char **line)
 {
 	int				i;
 	char			*str;
-	static	char	*tmp[BUFF_SIZE];
+	static	char	*tmp[1];
 
 	if (!tmp[fd])
-		tmp[fd] = ft_strnew(1);
-	if (fd < 0 || !line || !(str = ft_strdup(ft_stockfile(fd))))
+	if (!(tmp[fd] = (char *)malloc(sizeof(tmp[fd]) * (1))))
 		return (-1);
-	tmp[fd] = ft_strjoin_free(ft_strdup(tmp[fd]), str);
-	free(str);
+	if (fd < 0 || !line || !(str = ft_stockfile(fd)))
+		return (-1);
+	tmp[fd] = ft_strjoin(tmp[fd], str);
+	ft_cleanstr(str, ft_strlen(str));
+	ft_strdel(&str);
 	i = 0;
 	if (tmp[fd][i] == '\0')
 	{
 		*line = NULL;
-		free(tmp[fd]);
+		ft_cleanstr(tmp[fd], ft_strlen(tmp[fd]));
+		ft_strdel(tmp);
 		return (0);
 	}
 	while (tmp[fd][i] != '\n' && tmp[fd][i])
 		i++;
-	if (!(*line = (char *)malloc(sizeof(*line) * (i + 1))))
-		return (-1);
 	*line = ft_strsub(tmp[fd], 0, i);
+	ft_cleanstr(tmp[fd], i);
 	tmp[fd] = &tmp[fd][i + 1];
-	//tmp[fd] = ft_strdup(ft_strchr(tmp[fd], '\n') + 1);
 	return (1);
 }
 /*
