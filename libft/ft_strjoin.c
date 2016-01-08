@@ -3,40 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoinier <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cdebord <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/25 18:16:55 by amoinier          #+#    #+#             */
-/*   Updated: 2016/01/08 15:02:17 by amoinier         ###   ########.fr       */
+/*   Created: 2015/11/26 18:30:22 by cdebord           #+#    #+#             */
+/*   Updated: 2015/12/07 10:44:08 by cdebord          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *str1, char const *str2)
 {
+	char	*newstr;
 	int		i;
 	int		j;
-	char	*str;
-	int		len;
 
-	if (!s1 || !s2)
-		return (NULL);
-	len = ft_strlen(s1) + ft_strlen(s2);
-	i = 0;
-	j = 0;
-	str = (char *)malloc(sizeof(*str) * len + 1);
-	if (str == NULL)
-		return (NULL);
-	while (s1[i])
+	if (str1 && str2)
 	{
-		str[i] = s1[i];
-		i++;
+		newstr = (char *)malloc(sizeof(newstr) *
+								(ft_strlen(str1) + ft_strlen(str2) + 1));
+		if (newstr == NULL)
+			return (NULL);
+		i = -1;
+		while (str1[++i])
+			newstr[i] = str1[i];
+		j = -1;
+		while (str2[++j])
+			newstr[i + j] = str2[j];
+		newstr[i + j] = '\0';
+		return (newstr);
 	}
-	while (s2[j])
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = '\0';
-	return (str);
+	return (NULL);
 }

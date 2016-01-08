@@ -6,7 +6,7 @@
 /*   By: amoinier <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 17:02:06 by amoinier          #+#    #+#             */
-/*   Updated: 2016/01/08 17:04:42 by amoinier         ###   ########.fr       */
+/*   Updated: 2016/01/08 17:34:43 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int				get_next_line(int const fd, char **line)
 {
 	int				i;
 	char			*buf;
-//	char			*tt;
+	char			*tt;
 	static	char	*tmp[BUFF_SIZE];
 
 	if (fd < 0 || !line ||
@@ -60,9 +60,10 @@ int				get_next_line(int const fd, char **line)
 	while (tmp[fd][i] != '\n' && tmp[fd][i])
 		i++;
 	*line = ft_strsub(tmp[fd], 0, i);
-	//tt = (char *)malloc(sizeof(tt) * (ft_strlen(tmp[fd]) + 1));
-	ft_strcpy(tmp[fd], &tmp[fd][i + 1]);
-	//tmp[fd] = tt;
+	tt = (char *)malloc(sizeof(tt) * (ft_strlen(tmp[fd]) + 1));
+	ft_strcpy(tt, &tmp[fd][i + 1]);
+	tmp[fd] = tt;
+	free(tt);
 	return (1);
 }
 /*
