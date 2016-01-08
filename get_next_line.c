@@ -6,7 +6,7 @@
 /*   By: amoinier <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 17:02:06 by amoinier          #+#    #+#             */
-/*   Updated: 2016/01/07 20:33:42 by amoinier         ###   ########.fr       */
+/*   Updated: 2016/01/08 17:04:42 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,55 +14,55 @@
 
 static	char	*ft_strjoin_free(char *s1, char *s2)
 {
-	char    *tmp;
+	char	*tmp;
 
-	tmp = ft_strdup(s1);
+	tmp = s1;
 	s1 = ft_strjoin(tmp, s2);
 	free(tmp);
+	tmp = NULL;
 	return (s1);
 }
 
-static	int	ft_stockfile(int const fd, char *tmp[fd], char *buf)
+static	int		ft_stockfile(int const fd, char *tmp[fd], char *buf)
 {
 	int		ret;
-	
+
 	while (!(ft_strchr(buf, '\n')) && (ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
-		buf[ret] = '\0';;
+		buf[ret] = '\0';
 		tmp[fd] = ft_strjoin_free(tmp[fd], buf);
 	}
-	if (ret < 0)
-		return (-1);
+	free(buf);
+	buf = NULL;
 	return (ret);
 }
 
 int				get_next_line(int const fd, char **line)
 {
 	int				i;
-	int				ret;
 	char			*buf;
+//	char			*tt;
 	static	char	*tmp[BUFF_SIZE];
 
-	buf = ft_strnew(BUFF_SIZE);
-	if (fd < 0 || !line)
+	if (fd < 0 || !line ||
+	(!(buf = (char *)malloc(sizeof(buf) * (BUFF_SIZE + 1)))))
 		return (-1);
-	if (!tmp[fd])
-		tmp[fd] = ft_strnew(1);
-	if ((ret = ft_stockfile(fd, &(*tmp), buf) < 0))
+	if (!tmp[fd] && (!(tmp[fd] = (char *)malloc(sizeof(tmp[fd]) * (1 + 1)))))
 		return (-1);
-	ft_strdel(&buf);
-	i = 0;
+	if (ft_stockfile(fd, &(*tmp), buf) < 0)
+		return (-1);
 	if (*tmp[fd] == '\0')
 	{
 		*line = NULL;
-		tmp[fd] = NULL;
 		return (0);
 	}
+	i = 0;
 	while (tmp[fd][i] != '\n' && tmp[fd][i])
 		i++;
 	*line = ft_strsub(tmp[fd], 0, i);
-	tmp[fd] = &tmp[fd][i + 1];
-	//tmp[fd] = ft_strdup(ft_strchr(tmp[fd], '\n') + 1);
+	//tt = (char *)malloc(sizeof(tt) * (ft_strlen(tmp[fd]) + 1));
+	ft_strcpy(tmp[fd], &tmp[fd][i + 1]);
+	//tmp[fd] = tt;
 	return (1);
 }
 /*
@@ -74,7 +74,6 @@ int		main(int ac, char **av)
 
 	line = NULL;
 	ac = ac * 1;
-	i = 0;
 	fd = open(av[1], O_RDONLY);
 	while ((i = get_next_line(fd, &line)) == 1)
 	{
