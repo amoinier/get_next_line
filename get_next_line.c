@@ -6,7 +6,7 @@
 /*   By: amoinier <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 17:02:06 by amoinier          #+#    #+#             */
-/*   Updated: 2016/01/12 12:37:19 by amoinier         ###   ########.fr       */
+/*   Updated: 2016/01/12 13:56:56 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ static	int		ft_space(char *s)
 int				get_next_line(int const fd, char **line)
 {
 	char			*tt;
-	static	char	*tmp[1];
+	static	char	*tmp[2147483647];
 
-	if (fd < 0 || !line || BUFF_SIZE < 1)
+	if (fd < 0 || !line || BUFF_SIZE < 0)
 		return (-1);
 	if (!tmp[fd] && (!(tmp[fd] = (char *)malloc(sizeof(tmp[fd]) * (1 + 1)))))
 		return (-1);
