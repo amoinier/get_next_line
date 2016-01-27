@@ -6,7 +6,7 @@
 /*   By: amoinier <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/24 11:48:22 by amoinier          #+#    #+#             */
-/*   Updated: 2016/01/08 15:11:49 by amoinier         ###   ########.fr       */
+/*   Updated: 2015/11/25 13:24:15 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,6 @@ char	*ft_strcpy(char *dst, const char *src)
 		dst[k] = src[k];
 		k++;
 	}
-	dst[k] = '\0';
+	dst[k] = src[k];
 	return (dst);
 }
