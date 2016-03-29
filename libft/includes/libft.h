@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoinier <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: amoinier <amoinier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 15:14:46 by amoinier          #+#    #+#             */
-/*   Updated: 2016/01/27 14:45:36 by amoinier         ###   ########.fr       */
+/*   Updated: 2016/03/29 17:59:46 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,6 @@ char			*ft_strtrimall(char const *s, char c);
 int				ft_power(int nb, int power);
 int				ft_sqrt(int nb);
 int				ft_valabs(int i);
+int				ft_whereisc(char *s, char c);
 
 #endif

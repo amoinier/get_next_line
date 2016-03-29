@@ -3,85 +3,100 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoinier <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: amoinier <amoinier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 17:02:06 by amoinier          #+#    #+#             */
-/*   Updated: 2016/01/27 15:57:40 by amoinier         ###   ########.fr       */
+/*   Updated: 2016/03/29 20:11:54 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static	char	*ft_strjoin_free(char *s1, char *s2)
-{
-	char	*tmp;
-
-	tmp = s1;
-	if (!(s1 = ft_strjoin(tmp, s2)))
-		return (NULL);
-	free(tmp);
-	return (s1);
-}
-
-static	int		ft_stockfile(int const fd, char *tmp[fd])
+static	int		ft_stockfile(int const fd, t_lect *lect)
 {
 	int		ret;
 	char	buf[BUFF_SIZE + 1];
+	char	*tmmp;
 
-	while (!(ft_strchr(tmp[fd], '\n')) && (ret = read(fd, buf, BUFF_SIZE)) > 0)
+	//ft_putchar('A');
+	//ft_putstr(lect->tmp);
+	//ft_putchar('B');
+	while (!(ft_strchr(lect->tmp, '\n')) && (ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[ret] = '\0';
-		tmp[fd] = ft_strjoin_free(tmp[fd], buf);
+		tmmp = lect->tmp;
+		if (!(lect->tmp = ft_strjoin(tmmp, buf)))
+			return (-1);
+		free(tmmp);
 	}
 	return (ret);
 }
 
-static	int		ft_space(char *s)
+static	t_lect	**ft_realloc(t_lect **p, int nline)
 {
-	int	i;
+	t_lect	**tmp;
+	int		i;
 
 	i = 0;
-	while (s[i])
+	if (!(tmp = (t_lect **)malloc(sizeof(tmp) * (nline + 1))))
+		return (NULL);
+	while (i != nline)
 	{
-		if (s[i] == '\n')
-			return (i);
+		tmp[i] = p[i];
 		i++;
 	}
-	return (i);
+	free(p);
+	p = NULL;
+	p = tmp;
+	return (p);
 }
 
-static	int		ft_line(int const fd, char *tmp[fd], char **line)
+static	t_lect	*init_elem(int const fd)
 {
-	int		spc;
-	char	*tt;
+	t_lect	*lect;
 
-	spc = ft_space(tmp[fd]);
-	*line = ft_strsub(tmp[fd], 0, spc);
-	if (!(tt = (char *)malloc(sizeof(tt) * (ft_strlen(tmp[fd]) + 1))))
-		return (-1);
-	ft_strcpy(tt, &tmp[fd][spc + 1]);
-	ft_strclr(tmp[fd]);
-	tmp[fd] = ft_strcpy(tmp[fd], tt);
-	free(tt);
-	return (1);
+	if (!(lect = (t_lect *)malloc(sizeof(lect))))
+		return (NULL);
+	lect->fd = fd;
+	lect->nb = 0;
+	if (!(lect->tmp = ft_strnew(2)))
+		return (NULL);
+	return (lect);
 }
 
 int				get_next_line(int const fd, char **line)
 {
-	static	char	*tmp[256];
+	static	t_lect	**lect;
+	int				spc;
+	char			*tt;
+	int				x;
 
-	if (fd < 0 || !line || BUFF_SIZE < 0 || fd > 256)
+	if ((!lect && (!(lect = (t_lect **)malloc(sizeof(lect))))) ||
+	(!lect[0] && (!(lect[0] = init_elem(fd)))))
 		return (-1);
-	if (!tmp[fd] && (!(tmp[fd] = ft_strnew(2))))
-		return (-1);
-	if (ft_stockfile(fd, &(*tmp)) < 0)
-		return (-1);
-	if (tmp[fd][0] == '\0')
+	//ft_putchar('C');
+	x = 0;
+	while (x < lect[0]->nb && lect[x]->fd != fd)
+		x++;
+	//ft_putchar('D');
+	if (!lect[x])
 	{
-		*line = NULL;
-		return (0);
+		lect[0]->nb = x + 1;
+		ft_realloc(lect, x + 1);
+		lect[x + 1] = init_elem(fd);
+		lect[x + 2] = NULL;
 	}
-	if (ft_line(fd, tmp, line) < 0)
+	if (fd < 0 || !line || BUFF_SIZE < 0 || ft_stockfile(fd, lect[x]) < 0)
 		return (-1);
+	if (lect[x]->tmp[0] == '\0' && (*line = NULL) == NULL)
+		return (0);
+	spc = ft_whereisc(lect[x]->tmp, '\n');
+	*line = ft_strsub(lect[x]->tmp, 0, spc);
+	if (!(tt = (char *)malloc(sizeof(tt) * (ft_strlen(lect[x]->tmp) + 1))))
+		return (-1);
+	ft_strcpy(tt, &lect[x]->tmp[spc + 1]);
+	ft_strclr(lect[x]->tmp);
+	lect[x]->tmp = ft_strcpy(lect[x]->tmp, tt);
+	free(tt);
 	return (1);
 }

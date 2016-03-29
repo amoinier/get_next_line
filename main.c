@@ -1,34 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amoinier <amoinier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/12/19 16:54:47 by amoinier          #+#    #+#             */
-/*   Updated: 2016/03/29 20:05:07 by amoinier         ###   ########.fr       */
+/*   Created: 2016/03/29 18:22:11 by amoinier          #+#    #+#             */
+/*   Updated: 2016/03/29 19:53:39 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "get_next_line.h"
+#include <fcntl.h>
 
-# define BUFF_SIZE 32
-
-# include "libft/includes/libft.h"
-# include <fcntl.h>
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <unistd.h>
-# include <stdlib.h>
-
-typedef struct	s_lect
+int	main(int ac, char **av)
 {
-	char		*tmp;
-	int			fd;
-	int			nb;
-}				t_lect;
+	char	*line;
+	int		a;
+	int 	fd;
+	ac = 2;
 
-int		get_next_line(int const fd, char **line);
-
-#endif
+	fd = open(av[1], O_RDONLY);
+	while ((a = get_next_line(fd, &line)) > 0)
+	{
+		//ft_putnbr(a);
+		ft_putchar('\n');
+		ft_putstr(line);
+		ft_putchar('\n');
+	}
+	ft_putnbr(a);
+	return (0);
+}

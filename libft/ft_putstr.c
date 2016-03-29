@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoinier <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: amoinier <amoinier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:11:15 by amoinier          #+#    #+#             */
-/*   Updated: 2015/11/24 18:13:09 by amoinier         ###   ########.fr       */
+/*   Updated: 2016/03/29 18:28:50 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@ void	ft_putstr(char const *s)
 	int	i;
 
 	i = 0;
+	if (!s)
+	{
+		write(1, "NULL", 4);
+		return ;
+	}
 	while (s[i])
 	{
 		write(1, &s[i], 1);

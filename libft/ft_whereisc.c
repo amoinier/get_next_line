@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_whereisc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amoinier <amoinier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/12/19 16:54:47 by amoinier          #+#    #+#             */
-/*   Updated: 2016/03/29 20:05:07 by amoinier         ###   ########.fr       */
+/*   Created: 2016/03/29 16:45:54 by amoinier          #+#    #+#             */
+/*   Updated: 2016/03/29 17:11:43 by amoinier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-
-# define BUFF_SIZE 32
-
-# include "libft/includes/libft.h"
-# include <fcntl.h>
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <unistd.h>
-# include <stdlib.h>
-
-typedef struct	s_lect
+int		ft_whereisc(char *s, char c)
 {
-	char		*tmp;
-	int			fd;
-	int			nb;
-}				t_lect;
+	int	i;
 
-int		get_next_line(int const fd, char **line);
-
-#endif
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == c)
+			return (i);
+		i++;
+	}
+	return (i);
+}
